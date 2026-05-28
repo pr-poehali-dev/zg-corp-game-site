@@ -8,6 +8,7 @@ const NAV_ITEMS = [
   { label: "О КОРПОРАЦИИ", href: "#about" },
   { label: "ЛОКАЦИЯ", href: "#location" },
   { label: "ИГРЫ", href: "#schedule" },
+  { label: "ДОЛЖНОСТИ", href: "#ranks" },
 ];
 
 const GAMES = [
@@ -457,6 +458,135 @@ export default function Index() {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════ RANKS ═══════════ */}
+      <section id="ranks" className="py-24 bg-[#0d0d0d] relative overflow-hidden">
+        <div className="absolute inset-0 grid-bg opacity-15 pointer-events-none" />
+
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="flex items-center gap-4 mb-4">
+            <span className="font-mono-ibm text-[#00ff88] text-xs tracking-[0.3em]">05 /</span>
+            <h2 className="font-russo text-4xl md:text-5xl text-white">ДОЛЖНОСТИ</h2>
+            <div className="flex-1 h-px bg-[#1e1e1e] ml-4 hidden md:block" />
+          </div>
+          <p className="font-oswald font-light text-[#666] text-lg mb-14 ml-12 md:ml-20">
+            Иерархия корпорации — от новичка до создателя
+          </p>
+
+          <div className="relative">
+            {/* Vertical line */}
+            <div className="absolute left-[22px] md:left-[27px] top-0 bottom-0 w-px bg-gradient-to-b from-[#00ff88]/40 via-[#00ff88]/20 to-[#00ff88]/60" />
+
+            <div className="flex flex-col gap-3">
+              {[
+                {
+                  level: 1,
+                  title: "ПОМОЩНИК",
+                  color: "#555",
+                  badge: "LVL 1",
+                  desc: "Начальный уровень. Может узнавать список игр на сегодня.",
+                },
+                {
+                  level: 2,
+                  title: "ТЕСТЕР",
+                  color: "#6b7280",
+                  badge: "LVL 2",
+                  desc: "Тестирует новые игры до их официального выхода. Доступ к закрытым сессиям.",
+                },
+                {
+                  level: 3,
+                  title: "АССИСТЕНТ",
+                  color: "#3b82f6",
+                  badge: "LVL 3",
+                  desc: "Знает расписание всех игр. Имеет базовые права управления в корпорации.",
+                },
+                {
+                  level: 4,
+                  title: "МОДЕРАТОР",
+                  color: "#8b5cf6",
+                  badge: "LVL 4",
+                  desc: "Расширенные права. Следит за порядком во время игр и разрешает споры.",
+                },
+                {
+                  level: 5,
+                  title: "МЛ. АДМИН",
+                  color: "#f59e0b",
+                  badge: "LVL 5",
+                  desc: "Младший администратор. Больше прав, чем у модератора. Помогает в организации.",
+                },
+                {
+                  level: 6,
+                  title: "АДМИН",
+                  color: "#f97316",
+                  badge: "LVL 6",
+                  desc: "Администратор корпорации. Полное управление игровыми сессиями.",
+                },
+                {
+                  level: 7,
+                  title: "ПРОДВИНУТЫЙ АДМИН",
+                  color: "#ef4444",
+                  badge: "LVL 7",
+                  desc: "Расширенные административные права. Управление составом и правилами.",
+                },
+                {
+                  level: 8,
+                  title: "СТАРШИЙ АДМИН",
+                  color: "#ec4899",
+                  badge: "LVL 8",
+                  desc: "Высший административный ранг. Контролирует всех администраторов.",
+                },
+                {
+                  level: 9,
+                  title: "ПРАВАЯ РУКА СОЗДАТЕЛЯ",
+                  color: "#00cc6a",
+                  badge: "LVL 9",
+                  desc: "Доверенное лицо создателя. Действует от его имени. Практически неограниченные права.",
+                },
+                {
+                  level: 10,
+                  title: "СОЗДАТЕЛЬ",
+                  color: "#00ff88",
+                  badge: "LVL 10",
+                  top: true,
+                  desc: "Основатель и глава ZG Corp. Абсолютная власть в корпорации.",
+                },
+              ].map((rank) => (
+                <div key={rank.level} className="flex items-start gap-5 pl-1">
+                  {/* Level dot */}
+                  <div
+                    className="flex-shrink-0 w-10 h-10 md:w-11 md:h-11 flex items-center justify-center border-2 z-10 relative"
+                    style={{ borderColor: rank.color, background: "#0d0d0d", boxShadow: rank.top ? `0 0 16px ${rank.color}60` : "none" }}
+                  >
+                    <span className="font-russo text-xs" style={{ color: rank.color }}>{rank.level}</span>
+                  </div>
+
+                  {/* Card */}
+                  <div
+                    style={{
+                      clipPath: "polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px))",
+                      borderColor: rank.top ? `${rank.color}60` : "#1e1e1e",
+                      background: rank.top ? `${rank.color}08` : "#111",
+                      boxShadow: rank.top ? `0 0 24px ${rank.color}20` : "none",
+                    }}
+                    className="flex-1 flex flex-col md:flex-row md:items-center gap-2 md:gap-6 p-4 border mb-0.5"
+                  >
+                    <div className="flex items-center gap-3 md:w-56 flex-shrink-0">
+                      <span
+                        className="font-mono-ibm text-[9px] tracking-widest px-2 py-0.5 border flex-shrink-0"
+                        style={{ color: rank.color, borderColor: `${rank.color}40`, background: `${rank.color}10` }}
+                      >
+                        {rank.badge}
+                      </span>
+                      <span className="font-russo text-sm md:text-base text-white tracking-wide">{rank.title}</span>
+                    </div>
+                    <p className="font-oswald font-light text-[#777] text-sm leading-relaxed">{rank.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
