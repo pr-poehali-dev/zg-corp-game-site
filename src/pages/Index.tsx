@@ -10,51 +10,35 @@ const NAV_ITEMS = [
   { label: "РАСПИСАНИЕ", href: "#schedule" },
 ];
 
-const SCHEDULE_EVENTS = [
+const DAILY_GAMES = [
   {
-    date: "07 ИЮН",
-    day: "СБ",
-    title: "ОПЕРАЦИЯ «ТУМАН»",
-    type: "РАЗВЕДКА",
-    time: "19:00",
-    status: "upcoming",
-    desc: "Командная игра на выживание в ночном городе. Найди агентов противника раньше, чем они найдут тебя.",
+    slot: "ИГРА 1",
+    time: "12:00",
+    title: "ДНЕВНОЙ СТАРТ",
+    type: "КОМАНДНАЯ",
+    desc: "Открытая игра для всех желающих. Команды формируются на месте.",
   },
   {
-    date: "14 ИЮН",
-    day: "СБ",
-    title: "ЗАХВАТ ТЕРРИТОРИИ",
+    slot: "ИГРА 2",
+    time: "15:00",
+    title: "ДНЕВНАЯ СХВАТКА",
     type: "СТРАТЕГИЯ",
-    time: "18:00",
-    status: "upcoming",
-    desc: "Две команды борются за контроль над ключевыми точками Железногорска. Тактика решает всё.",
+    desc: "Захват территорий на Заводском 3. Нужна тактика и слаженность команды.",
   },
   {
-    date: "21 ИЮН",
-    day: "СБ",
-    title: "АГЕНТ ПОД ПРИКРЫТИЕМ",
+    slot: "ИГРА 3",
+    time: "18:00",
+    title: "ВЕЧЕРНИЙ РАУНД",
     type: "РОЛЕВАЯ",
-    time: "20:00",
-    status: "upcoming",
-    desc: "Кто из игроков предатель? Раскрой шпиона до наступления полуночи.",
-  },
-  {
-    date: "28 ИЮН",
-    day: "СБ",
-    title: "ГРАНД-ФИНАЛ СЕЗОНА",
-    type: "ЧЕМПИОНАТ",
-    time: "17:00",
+    desc: "Сценарные игры с заданиями. Каждый день — новый сценарий.",
     status: "featured",
-    desc: "Финальная битва лучших агентов сезона. Победитель получает звание Элитного Агента ZG Corp.",
   },
   {
-    date: "05 ИЮЛ",
-    day: "СБ",
-    title: "СТАРТ НОВОГО СЕЗОНА",
-    type: "ОТКРЫТИЕ",
-    time: "18:00",
-    status: "upcoming",
-    desc: "Начало второго сезона. Новые правила, новые локации, новые агенты.",
+    slot: "ИГРА 4",
+    time: "21:00",
+    title: "НОЧНАЯ ОПЕРАЦИЯ",
+    type: "ВЫЖИВАНИЕ",
+    desc: "Ночная игра для опытных игроков. Темнота меняет правила.",
   },
 ];
 
@@ -97,7 +81,7 @@ export default function Index() {
         <div className="animate-ticker whitespace-nowrap flex items-center gap-0">
           {Array(4).fill(null).map((_, i) => (
             <span key={i} className="font-mono-ibm text-[10px] font-medium text-black tracking-widest">
-              &nbsp;&nbsp;&nbsp;◆ ZG CORP — РЕАЛЬНЫЕ ИГРЫ В РЕАЛЬНОМ ГОРОДЕ &nbsp;&nbsp;&nbsp;◆ ЖЕЛЕЗНОГОРСК, КУРСКАЯ ОБЛ &nbsp;&nbsp;&nbsp;◆ ЗАВОДСКОЙ 3 &nbsp;&nbsp;&nbsp;◆ БЫВШ. ОТКИ &nbsp;&nbsp;&nbsp;◆ ВСТУПАЙ В ИГРУ &nbsp;&nbsp;&nbsp;◆ КАЖДУЮ СУББОТУ
+              &nbsp;&nbsp;&nbsp;◆ ZG CORP — РЕАЛЬНЫЕ ИГРЫ В РЕАЛЬНОМ ГОРОДЕ &nbsp;&nbsp;&nbsp;◆ ЖЕЛЕЗНОГОРСК, ЗАВОДСКОЙ 3 &nbsp;&nbsp;&nbsp;◆ 4 ИГРЫ КАЖДЫЙ ДЕНЬ &nbsp;&nbsp;&nbsp;◆ 50 ИГРОКОВ &nbsp;&nbsp;&nbsp;◆ БЫВШ. ОТКИ &nbsp;&nbsp;&nbsp;◆ ВСТУПАЙ В ИГРУ
             </span>
           ))}
         </div>
@@ -226,8 +210,8 @@ export default function Index() {
         <div className="max-w-6xl mx-auto px-6 py-6 grid grid-cols-2 md:grid-cols-4 gap-6">
           {[
             { val: "2+", label: "ГОДА ИГРЫ" },
-            { val: "100+", label: "АГЕНТОВ" },
-            { val: "50+", label: "ОПЕРАЦИЙ" },
+            { val: "50", label: "ИГРОКОВ" },
+            { val: "4", label: "ИГРЫ В ДЕНЬ" },
             { val: "1", label: "КОРПОРАЦИЯ" },
           ].map((s) => (
             <div key={s.label} className="text-center">
@@ -260,7 +244,7 @@ export default function Index() {
                   Всё началось под именем <span className="text-white font-normal">ОТКИ</span> — небольшой кружок энтузиастов, которые хотели вывести игры за пределы экранов.
                 </p>
                 <p className="font-oswald font-light text-[#999] text-lg leading-relaxed mt-4">
-                  Сегодня мы — <span className="text-[#00ff88] font-normal">ZG Corp</span>. Полноценная игровая корпорация с агентами, миссиями и реальными операциями на улицах Железногорска.
+                  Сегодня мы — <span className="text-[#00ff88] font-normal">ZG Corp</span>. 50 игроков, 4 игры каждый день прямо на Заводском 3 в Железногорске.
                 </p>
               </div>
 
@@ -288,14 +272,14 @@ export default function Index() {
                   desc: "Ты взаимодействуешь с реальными людьми, строишь стратегию и завоёвываешь доверие.",
                 },
                 {
-                  icon: "Shield",
-                  title: "КОРПОРАТИВНАЯ СТРУКТУРА",
-                  desc: "Агенты, ранги, миссии, операции — полноценная игровая вселенная.",
+                  icon: "Trophy",
+                  title: "50 ИГРОКОВ",
+                  desc: "Сообщество из 50 активных участников, готовых играть каждый день.",
                 },
                 {
                   icon: "Zap",
-                  title: "КАЖДУЮ НЕДЕЛЮ",
-                  desc: "Регулярные игры каждую субботу. Новые сценарии, новые испытания.",
+                  title: "4 ИГРЫ КАЖДЫЙ ДЕНЬ",
+                  desc: "Каждый день на Заводском 3 — четыре игры в разное время. Приходи в любое удобное.",
                 },
               ].map((f) => (
                 <div
@@ -411,62 +395,52 @@ export default function Index() {
             <div className="flex-1 h-px bg-[#1e1e1e] ml-4 hidden md:block" />
           </div>
           <p className="font-oswald font-light text-[#666] text-lg mb-14 ml-12 md:ml-20">
-            Ближайшие операции и события корпорации
+            Каждый день на Заводском 3 — 4 игры. Приходи в любое время.
           </p>
 
-          <div className="flex flex-col gap-3">
-            {SCHEDULE_EVENTS.map((ev, i) => (
+          {/* Daily schedule banner */}
+          <div
+            style={{ clipPath: "polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))" }}
+            className="flex items-center gap-4 p-4 bg-[#00ff88]/5 border border-[#00ff88]/30 mb-8"
+          >
+            <div className="w-2 h-2 rounded-full bg-[#00ff88] animate-pulse-green flex-shrink-0" />
+            <span className="font-mono-ibm text-[#00ff88] text-xs tracking-widest">ЕЖЕДНЕВНО</span>
+            <div className="h-px flex-1 bg-[#00ff88]/20" />
+            <span className="font-oswald text-[#999] text-sm">ул. Заводской, 3 · Железногорск</span>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-4">
+            {DAILY_GAMES.map((ev, i) => (
               <div
                 key={i}
                 style={{ clipPath: "polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))" }}
-                className={`group relative flex flex-col md:flex-row md:items-center gap-4 p-5 border transition-all duration-300 ${
+                className={`relative flex gap-5 p-6 border transition-all duration-300 hover:border-[#00ff88]/30 ${
                   ev.status === "featured"
                     ? "bg-[#00ff88]/5 border-[#00ff88]/40"
-                    : "bg-[#111] border-[#1e1e1e] hover:border-[#00ff88]/20"
+                    : "bg-[#111] border-[#1e1e1e]"
                 }`}
               >
                 {ev.status === "featured" && (
                   <div className="absolute -top-3 left-6 bg-[#00ff88] text-black font-mono-ibm text-[9px] tracking-widest px-3 py-1">
-                    ГЛАВНОЕ СОБЫТИЕ
+                    ЛУЧШЕЕ ВРЕМЯ
                   </div>
                 )}
-
-                <div className="flex items-center gap-4 md:w-36 flex-shrink-0">
-                  <div className={`w-14 h-14 flex flex-col items-center justify-center border flex-shrink-0 ${
-                    ev.status === "featured" ? "border-[#00ff88] bg-[#00ff88]/10" : "border-[#2a2a2a] bg-[#0d0d0d]"
-                  }`}>
-                    <span className={`font-russo text-base leading-none ${ev.status === "featured" ? "text-[#00ff88]" : "text-white"}`}>
-                      {ev.date.split(" ")[0]}
-                    </span>
-                    <span className="font-mono-ibm text-[10px] text-[#555] tracking-wider">
-                      {ev.date.split(" ")[1]}
-                    </span>
-                  </div>
-                  <div className="md:hidden">
-                    <div className={`font-mono-ibm text-[10px] tracking-widest mb-1 ${ev.status === "featured" ? "text-[#00ff88]" : "text-[#555]"}`}>
-                      {ev.type}
-                    </div>
-                    <div className="font-russo text-white text-base">{ev.title}</div>
-                  </div>
+                {/* Time block */}
+                <div className={`w-16 flex flex-col items-center justify-center border flex-shrink-0 ${
+                  ev.status === "featured" ? "border-[#00ff88] bg-[#00ff88]/10" : "border-[#2a2a2a] bg-[#0d0d0d]"
+                }`}>
+                  <span className={`font-russo text-xl leading-none ${ev.status === "featured" ? "text-[#00ff88]" : "text-white"}`}>
+                    {ev.time}
+                  </span>
+                  <span className="font-mono-ibm text-[9px] text-[#555] tracking-wider mt-1">{ev.slot}</span>
                 </div>
-
-                <div className="hidden md:block md:flex-1">
+                {/* Info */}
+                <div className="flex-1 min-w-0">
                   <div className={`font-mono-ibm text-[10px] tracking-widest mb-1 ${ev.status === "featured" ? "text-[#00ff88]" : "text-[#555]"}`}>
                     {ev.type}
                   </div>
-                  <div className="font-russo text-white text-base">{ev.title}</div>
-                </div>
-
-                <div className="md:flex-1 md:max-w-xs">
+                  <div className="font-russo text-white text-base mb-2">{ev.title}</div>
                   <p className="font-oswald font-light text-[#777] text-sm leading-relaxed">{ev.desc}</p>
-                </div>
-
-                <div className="flex items-center gap-4 md:w-28 justify-between md:justify-end flex-shrink-0">
-                  <div className="text-right">
-                    <div className="font-russo text-white text-lg">{ev.time}</div>
-                    <div className="font-mono-ibm text-[10px] text-[#555]">{ev.day}</div>
-                  </div>
-                  <div className={`w-2 h-2 rounded-full flex-shrink-0 ${ev.status === "featured" ? "bg-[#00ff88] animate-pulse-green" : "bg-[#333]"}`} />
                 </div>
               </div>
             ))}
@@ -479,7 +453,7 @@ export default function Index() {
             <div className="font-mono-ibm text-[#00ff88] text-xs tracking-[0.3em] mb-3">ХОЧЕШЬ УЧАСТВОВАТЬ?</div>
             <h3 className="font-russo text-2xl md:text-3xl text-white mb-4">ВСТУПИ В КОРПОРАЦИЮ</h3>
             <p className="font-oswald font-light text-[#777] text-lg max-w-lg mx-auto mb-6">
-              Свяжись с нами, чтобы получить доступ к играм. Новые агенты принимаются каждый месяц.
+              50 игроков уже в деле. Приходи на Заводской 3 в любой день — игра найдётся.
             </p>
             <button
               style={{ clipPath: "polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))" }}
