@@ -363,9 +363,9 @@ export default function Index() {
 
               <div className="grid grid-cols-2 gap-4">
                 {[
-                  { icon: "Clock", label: "ВРЕМЯ ИГРЫ", val: "Каждую субботу" },
-                  { icon: "MapPin", label: "ЗОНА ОПЕРАЦИЙ", val: "Весь город" },
-                  { icon: "Users", label: "УЧАСТНИКИ", val: "От 6 человек" },
+                  { icon: "Clock", label: "ВРЕМЯ ИГРЫ", val: "Каждый день" },
+                  { icon: "MapPin", label: "ЗОНА ИГРЫ", val: "Заводской 3" },
+                  { icon: "Users", label: "УЧАСТНИКИ", val: "От 2 человек" },
                   { icon: "Calendar", label: "СЕЗОН", val: "Круглый год" },
                 ].map((item) => (
                   <div key={item.label}
