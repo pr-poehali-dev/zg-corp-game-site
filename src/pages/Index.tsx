@@ -7,38 +7,49 @@ const NAV_ITEMS = [
   { label: "ГЛАВНАЯ", href: "#home" },
   { label: "О КОРПОРАЦИИ", href: "#about" },
   { label: "ЛОКАЦИЯ", href: "#location" },
-  { label: "РАСПИСАНИЕ", href: "#schedule" },
+  { label: "ИГРЫ", href: "#schedule" },
 ];
 
-const DAILY_GAMES = [
+const GAMES = [
   {
-    slot: "ИГРА 1",
-    time: "12:00",
-    title: "ДНЕВНОЙ СТАРТ",
-    type: "КОМАНДНАЯ",
-    desc: "Открытая игра для всех желающих. Команды формируются на месте.",
+    emoji: "🏃",
+    title: "КЛАССИЧЕСКИЕ ДОГОНЯЛКИ",
+    tag: "ОТ 2 ИГРОКОВ",
+    difficulty: "ЛЁГКАЯ",
+    rules: [
+      "Выбирается один водящий — «вода».",
+      "По сигналу вода начинает догонять остальных игроков.",
+      "Кого вода коснулась рукой — тот становится новым водящим.",
+      "Предыдущий водящий уходит в общую игру.",
+      "Игра продолжается без ограничений по времени.",
+    ],
   },
   {
-    slot: "ИГРА 2",
-    time: "15:00",
-    title: "ДНЕВНАЯ СХВАТКА",
-    type: "СТРАТЕГИЯ",
-    desc: "Захват территорий на Заводском 3. Нужна тактика и слаженность команды.",
+    emoji: "🦠",
+    title: "ЗАРАЖЕНИЕ",
+    tag: "ОТ 4 ИГРОКОВ",
+    difficulty: "СРЕДНЯЯ",
+    featured: true,
+    rules: [
+      "Выбирается один водящий — первый «заражённый».",
+      "Вода догоняет игроков и касается их.",
+      "Пойманный игрок тоже становится водой и помогает ловить остальных.",
+      "Группа заражённых растёт с каждым пойманным.",
+      "Игра заканчивается, когда заражены все — последний выживший побеждает.",
+    ],
   },
   {
-    slot: "ИГРА 3",
-    time: "18:00",
-    title: "ВЕЧЕРНИЙ РАУНД",
-    type: "РОЛЕВАЯ",
-    desc: "Сценарные игры с заданиями. Каждый день — новый сценарий.",
-    status: "featured",
-  },
-  {
-    slot: "ИГРА 4",
-    time: "21:00",
-    title: "НОЧНАЯ ОПЕРАЦИЯ",
-    type: "ВЫЖИВАНИЕ",
-    desc: "Ночная игра для опытных игроков. Темнота меняет правила.",
+    emoji: "⚽",
+    title: "ДОГОМЯЧ",
+    tag: "ОТ 3 ИГРОКОВ",
+    difficulty: "СРЕДНЯЯ",
+    rules: [
+      "Выбирается один водящий с мячом в руках.",
+      "Вода не может бегать с мячом — только стоять на месте и бросать.",
+      "Чтобы осалить игрока, нужно попасть в него мячом.",
+      "Осаленный игрок забирает мяч и становится новым водящим.",
+      "Попадание в голову не считается — бросать можно только ниже шеи.",
+    ],
   },
 ];
 
@@ -384,83 +395,68 @@ export default function Index() {
         </div>
       </section>
 
-      {/* ═══════════ SCHEDULE ═══════════ */}
+      {/* ═══════════ GAMES ═══════════ */}
       <section id="schedule" className="py-24 relative overflow-hidden">
         <div className="absolute inset-0 grid-bg opacity-20 pointer-events-none" />
 
         <div className="max-w-6xl mx-auto px-6">
           <div className="flex items-center gap-4 mb-4">
             <span className="font-mono-ibm text-[#00ff88] text-xs tracking-[0.3em]">04 /</span>
-            <h2 className="font-russo text-4xl md:text-5xl text-white">РАСПИСАНИЕ</h2>
+            <h2 className="font-russo text-4xl md:text-5xl text-white">ИГРЫ</h2>
             <div className="flex-1 h-px bg-[#1e1e1e] ml-4 hidden md:block" />
           </div>
           <p className="font-oswald font-light text-[#666] text-lg mb-14 ml-12 md:ml-20">
-            Каждый день на Заводском 3 — 4 игры. Приходи в любое время.
+            Популярные игры корпорации — правила и форматы
           </p>
 
-          {/* Daily schedule banner */}
-          <div
-            style={{ clipPath: "polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))" }}
-            className="flex items-center gap-4 p-4 bg-[#00ff88]/5 border border-[#00ff88]/30 mb-8"
-          >
-            <div className="w-2 h-2 rounded-full bg-[#00ff88] animate-pulse-green flex-shrink-0" />
-            <span className="font-mono-ibm text-[#00ff88] text-xs tracking-widest">ЕЖЕДНЕВНО</span>
-            <div className="h-px flex-1 bg-[#00ff88]/20" />
-            <span className="font-oswald text-[#999] text-sm">ул. Заводской, 3 · Железногорск</span>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-4">
-            {DAILY_GAMES.map((ev, i) => (
+          <div className="flex flex-col gap-6">
+            {GAMES.map((game, i) => (
               <div
                 key={i}
-                style={{ clipPath: "polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))" }}
-                className={`relative flex gap-5 p-6 border transition-all duration-300 hover:border-[#00ff88]/30 ${
-                  ev.status === "featured"
+                style={{ clipPath: "polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px))" }}
+                className={`relative p-7 border transition-all duration-300 ${
+                  game.featured
                     ? "bg-[#00ff88]/5 border-[#00ff88]/40"
-                    : "bg-[#111] border-[#1e1e1e]"
+                    : "bg-[#111] border-[#1e1e1e] hover:border-[#00ff88]/20"
                 }`}
               >
-                {ev.status === "featured" && (
-                  <div className="absolute -top-3 left-6 bg-[#00ff88] text-black font-mono-ibm text-[9px] tracking-widest px-3 py-1">
-                    ЛУЧШЕЕ ВРЕМЯ
+                {game.featured && (
+                  <div className="absolute -top-3 left-8 bg-[#00ff88] text-black font-mono-ibm text-[9px] tracking-widest px-3 py-1">
+                    САМАЯ ПОПУЛЯРНАЯ
                   </div>
                 )}
-                {/* Time block */}
-                <div className={`w-16 flex flex-col items-center justify-center border flex-shrink-0 ${
-                  ev.status === "featured" ? "border-[#00ff88] bg-[#00ff88]/10" : "border-[#2a2a2a] bg-[#0d0d0d]"
-                }`}>
-                  <span className={`font-russo text-xl leading-none ${ev.status === "featured" ? "text-[#00ff88]" : "text-white"}`}>
-                    {ev.time}
-                  </span>
-                  <span className="font-mono-ibm text-[9px] text-[#555] tracking-wider mt-1">{ev.slot}</span>
-                </div>
-                {/* Info */}
-                <div className="flex-1 min-w-0">
-                  <div className={`font-mono-ibm text-[10px] tracking-widest mb-1 ${ev.status === "featured" ? "text-[#00ff88]" : "text-[#555]"}`}>
-                    {ev.type}
+
+                {/* Header */}
+                <div className="flex flex-wrap items-start gap-4 mb-6">
+                  <span className="text-4xl leading-none">{game.emoji}</span>
+                  <div className="flex-1">
+                    <h3 className="font-russo text-xl md:text-2xl text-white tracking-wide mb-2">{game.title}</h3>
+                    <div className="flex flex-wrap gap-2">
+                      <span className="font-mono-ibm text-[10px] tracking-widest text-[#00ff88] bg-[#00ff88]/10 border border-[#00ff88]/20 px-2 py-1">
+                        {game.tag}
+                      </span>
+                      <span className="font-mono-ibm text-[10px] tracking-widest text-[#555] border border-[#2a2a2a] px-2 py-1">
+                        {game.difficulty}
+                      </span>
+                    </div>
                   </div>
-                  <div className="font-russo text-white text-base mb-2">{ev.title}</div>
-                  <p className="font-oswald font-light text-[#777] text-sm leading-relaxed">{ev.desc}</p>
+                </div>
+
+                {/* Rules */}
+                <div className="flex flex-col gap-3">
+                  {game.rules.map((rule, j) => (
+                    <div key={j} className="flex items-start gap-4">
+                      <div className={`flex-shrink-0 w-6 h-6 flex items-center justify-center border font-russo text-xs mt-0.5 ${
+                        game.featured ? "border-[#00ff88]/40 text-[#00ff88]" : "border-[#2a2a2a] text-[#555]"
+                      }`}>
+                        {j + 1}
+                      </div>
+                      <p className="font-oswald font-light text-[#999] text-base leading-relaxed">{rule}</p>
+                    </div>
+                  ))}
                 </div>
               </div>
             ))}
-          </div>
-
-          <div
-            style={{ clipPath: "polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))" }}
-            className="mt-12 p-8 bg-[#111] border border-[#1e1e1e] text-center"
-          >
-            <div className="font-mono-ibm text-[#00ff88] text-xs tracking-[0.3em] mb-3">ХОЧЕШЬ УЧАСТВОВАТЬ?</div>
-            <h3 className="font-russo text-2xl md:text-3xl text-white mb-4">ВСТУПИ В КОРПОРАЦИЮ</h3>
-            <p className="font-oswald font-light text-[#777] text-lg max-w-lg mx-auto mb-6">
-              50 игроков уже в деле. Приходи на Заводской 3 в любой день — игра найдётся.
-            </p>
-            <button
-              style={{ clipPath: "polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))" }}
-              className="bg-[#00ff88] text-black font-oswald font-semibold text-sm tracking-widest px-8 py-3 hover:bg-white transition-colors duration-200"
-            >
-              ЗАПИСАТЬСЯ НА ИГРУ
-            </button>
           </div>
         </div>
       </section>
