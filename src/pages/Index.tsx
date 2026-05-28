@@ -552,6 +552,7 @@ export default function Index() {
                   badge: "LVL 10",
                   top: true,
                   desc: "Основатель и глава ZG Corp. Абсолютная власть в корпорации.",
+                  name: "Матвей Корпорэйшн",
                 },
               ].map((rank) => (
                 <div key={rank.level} className="flex items-start gap-5 pl-1">
@@ -583,6 +584,12 @@ export default function Index() {
                       <span className="font-russo text-sm md:text-base text-white tracking-wide">{rank.title}</span>
                     </div>
                     <p className="font-oswald font-light text-[#777] text-sm leading-relaxed">{rank.desc}</p>
+                    {"name" in rank && rank.name && (
+                      <div className="flex items-center gap-2 flex-shrink-0 mt-1 md:mt-0">
+                        <Icon name="User" size={12} className="text-[#00ff88]" />
+                        <span className="font-russo text-sm tracking-wide" style={{ color: rank.color }}>{rank.name as string}</span>
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}
