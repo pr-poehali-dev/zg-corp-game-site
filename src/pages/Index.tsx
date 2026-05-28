@@ -648,6 +648,11 @@ export default function Index() {
             © {new Date().getFullYear()} ZG CORP
           </div>
         </div>
+        <div className="max-w-6xl mx-auto px-6 pt-4 pb-2 border-t border-[#151515] text-center">
+          <span className="font-mono-ibm text-[10px] text-[#333] tracking-widest">
+            Сайт создан <span className="text-[#555]">ZG Simple</span> <span className="text-[#2a2a2a]">(админ)</span> для любимого создателя <span className="text-[#00ff88]/40">Матвея</span> ♥
+          </span>
+        </div>
       </footer>
 
     </div>
