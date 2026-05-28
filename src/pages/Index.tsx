@@ -55,7 +55,7 @@ const GAMES = [
   {
     emoji: "🔪",
     title: "AMONG US",
-    tag: "ОТ 5 ИГРОКОВ",
+    tag: "ОТ 4 ИГРОКОВ",
     difficulty: "СРЕДНЯЯ",
     rules: [
       "Классическая игра Among Us в реальной жизни на территории Заводского 3.",
@@ -68,7 +68,7 @@ const GAMES = [
   {
     emoji: "🚀",
     title: "AMONG US+",
-    tag: "ОТ 6 ИГРОКОВ",
+    tag: "ОТ 4 ИГРОКОВ",
     difficulty: "СЛОЖНАЯ",
     featured: true,
     rules: [
