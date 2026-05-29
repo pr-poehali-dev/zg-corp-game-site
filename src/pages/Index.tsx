@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Icon from "@/components/ui/icon";
 
 const REGISTER_URL = "https://functions.poehali.dev/7c106308-51fb-46fc-91d1-fc9e4513ddc9";
+const LOGIN_URL = "https://functions.poehali.dev/e1686362-ae8f-4302-955b-18406df54c1a";
 
 const MAT_WORDS = ["хуй","хуя","хую","хуем","пизда","пиздец","пиздёж","ебать","ёбать","блядь","сука","мудак","залупа","шлюха","долбоёб","fuck","shit","bitch","asshole","cunt"];
 function hasMat(text: string) {
@@ -108,6 +109,8 @@ export default function Index() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [glitching, setGlitching] = useState(false);
 
+  const [darkMode, setDarkMode] = useState(true);
+
   const [showRegModal, setShowRegModal] = useState(false);
   const [regName, setRegName] = useState("");
   const [regPass, setRegPass] = useState("");
@@ -115,6 +118,13 @@ export default function Index() {
   const [regLoading, setRegLoading] = useState(false);
   const [regSuccess, setRegSuccess] = useState("");
   const [offlineMsg, setOfflineMsg] = useState(false);
+
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [loginName, setLoginName] = useState("");
+  const [loginPass, setLoginPass] = useState("");
+  const [loginError, setLoginError] = useState("");
+  const [loginLoading, setLoginLoading] = useState(false);
+  const [currentUser, setCurrentUser] = useState<string | null>(null);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -142,6 +152,26 @@ export default function Index() {
     document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
   };
 
+  const handleLogin = async () => {
+    setLoginError("");
+    if (!loginName.trim() || !loginPass.trim()) { setLoginError("Введи имя и пароль"); return; }
+    setLoginLoading(true);
+    const res = await fetch(LOGIN_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username: loginName.trim(), password: loginPass.trim() }),
+    });
+    const data = await res.json();
+    setLoginLoading(false);
+    if (data.success) {
+      setCurrentUser(data.username);
+      setShowLoginModal(false);
+      setLoginName(""); setLoginPass("");
+    } else {
+      setLoginError(data.error || "Ошибка входа");
+    }
+  };
+
   const handleRegister = async () => {
     setRegError("");
     if (!regName.trim() || !regPass.trim()) { setRegError("Заполни имя и пароль"); return; }
@@ -163,8 +193,19 @@ export default function Index() {
     }
   };
 
+  const t = {
+    bg: darkMode ? "bg-[#0a0a0a]" : "bg-[#f0f0f0]",
+    text: darkMode ? "text-[#e8e8e8]" : "text-[#111]",
+    nav: darkMode ? "bg-[#0a0a0a]/90 border-[#1e1e1e]" : "bg-white/90 border-[#ddd]",
+    navText: darkMode ? "text-[#888] hover:text-white" : "text-[#666] hover:text-black",
+    card: darkMode ? "bg-[#0d0d0d] border-[#1e1e1e]" : "bg-white border-[#ddd]",
+    input: darkMode ? "bg-[#111] border-[#222] text-white placeholder:text-[#333]" : "bg-[#f5f5f5] border-[#ccc] text-black placeholder:text-[#aaa]",
+    footer: darkMode ? "bg-[#0d0d0d] border-[#1e1e1e]" : "bg-white border-[#ddd]",
+    subtext: darkMode ? "text-[#555]" : "text-[#888]",
+  };
+
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-[#e8e8e8] overflow-x-hidden">
+    <div className={`min-h-screen ${t.bg} ${t.text} overflow-x-hidden transition-colors duration-300`}>
 
       {/* TICKER */}
       <div className="fixed top-0 left-0 right-0 z-50 bg-[#00ff88] h-7 overflow-hidden flex items-center">
@@ -178,7 +219,7 @@ export default function Index() {
       </div>
 
       {/* NAV */}
-      <nav className="fixed top-7 left-0 right-0 z-40 border-b border-[#1e1e1e] bg-[#0a0a0a]/90 backdrop-blur-md">
+      <nav className={`fixed top-7 left-0 right-0 z-40 border-b ${t.nav} backdrop-blur-md transition-colors duration-300`}>
         <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
           <button
             onClick={() => scrollTo("#home")}
@@ -212,6 +253,29 @@ export default function Index() {
             ))}
           </div>
 
+          <div className="hidden md:flex items-center gap-3">
+            {currentUser ? (
+              <div className="flex items-center gap-3">
+                <span className="font-mono-ibm text-[11px] text-[#00ff88] tracking-widest">▶ {currentUser}</span>
+                <button onClick={() => setCurrentUser(null)} className="font-mono-ibm text-[10px] text-[#555] hover:text-red-400 transition-colors tracking-widest">ВЫЙТИ</button>
+              </div>
+            ) : (
+              <button
+                onClick={() => { setShowLoginModal(true); setLoginError(""); setLoginName(""); setLoginPass(""); }}
+                style={{ clipPath: "polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px))" }}
+                className="border border-[#00ff88]/50 text-[#00ff88] font-oswald text-xs tracking-widest px-4 py-1.5 hover:bg-[#00ff88]/10 transition-colors"
+              >
+                ВОЙТИ
+              </button>
+            )}
+            <button
+              onClick={() => setDarkMode(!darkMode)}
+              className={`w-8 h-8 flex items-center justify-center border transition-colors ${darkMode ? "border-[#333] text-[#555] hover:text-[#00ff88] hover:border-[#00ff88]/30" : "border-[#ccc] text-[#888] hover:text-black hover:border-black"}`}
+            >
+              <Icon name={darkMode ? "Sun" : "Moon"} size={14} />
+            </button>
+          </div>
+
           <button
             className="md:hidden text-[#00ff88]"
             onClick={() => setMenuOpen(!menuOpen)}
@@ -221,7 +285,7 @@ export default function Index() {
         </div>
 
         {menuOpen && (
-          <div className="md:hidden border-t border-[#1e1e1e] bg-[#0a0a0a] px-6 py-4 flex flex-col gap-4">
+          <div className={`md:hidden border-t ${t.nav} px-6 py-4 flex flex-col gap-4`}>
             {NAV_ITEMS.map((item) => (
               <button
                 key={item.href}
@@ -231,6 +295,19 @@ export default function Index() {
                 {item.label}
               </button>
             ))}
+            <div className="flex items-center gap-3 pt-2 border-t border-[#1e1e1e]">
+              {currentUser ? (
+                <>
+                  <span className="font-mono-ibm text-[11px] text-[#00ff88] tracking-widest">▶ {currentUser}</span>
+                  <button onClick={() => setCurrentUser(null)} className="font-mono-ibm text-[10px] text-[#555] hover:text-red-400 transition-colors">ВЫЙТИ</button>
+                </>
+              ) : (
+                <button onClick={() => { setShowLoginModal(true); setMenuOpen(false); setLoginError(""); setLoginName(""); setLoginPass(""); }} className="font-oswald text-sm tracking-widest text-[#00ff88]">ВОЙТИ</button>
+              )}
+              <button onClick={() => setDarkMode(!darkMode)} className="ml-auto font-mono-ibm text-[10px] text-[#555] hover:text-[#00ff88] transition-colors tracking-widest">
+                {darkMode ? "☀ СВЕТЛАЯ" : "☾ ТЁМНАЯ"}
+              </button>
+            </div>
           </div>
         )}
       </nav>
@@ -803,6 +880,73 @@ export default function Index() {
                 </div>
               </>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* ═══════════ MODAL LOGIN ═══════════ */}
+      {showLoginModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+          <div
+            className={`relative ${t.card} w-full max-w-md p-8`}
+            style={{ clipPath: "polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px))" }}
+          >
+            <div className="absolute top-3 right-3 w-8 h-8 border-r border-t border-[#00ff88]/30 pointer-events-none" />
+            <div className="absolute bottom-3 left-3 w-8 h-8 border-l border-b border-[#00ff88]/30 pointer-events-none" />
+
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-1 h-6 bg-[#00ff88]" />
+              <h2 className="font-russo text-white text-xl tracking-widest">ВХОД</h2>
+            </div>
+
+            <div className="space-y-4 mb-6">
+              <div>
+                <label className="font-mono-ibm text-[10px] text-[#555] tracking-widest block mb-2">ИМЯ АГЕНТА</label>
+                <input
+                  type="text"
+                  value={loginName}
+                  onChange={(e) => setLoginName(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+                  placeholder="Твоё имя..."
+                  className={`w-full ${t.input} font-mono-ibm text-sm px-4 py-3 outline-none focus:border-[#00ff88]/50 transition-colors border`}
+                />
+              </div>
+              <div>
+                <label className="font-mono-ibm text-[10px] text-[#555] tracking-widest block mb-2">ПАРОЛЬ</label>
+                <input
+                  type="password"
+                  value={loginPass}
+                  onChange={(e) => setLoginPass(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+                  placeholder="Твой пароль..."
+                  className={`w-full ${t.input} font-mono-ibm text-sm px-4 py-3 outline-none focus:border-[#00ff88]/50 transition-colors border`}
+                />
+              </div>
+            </div>
+
+            {loginError && (
+              <div className="font-mono-ibm text-[11px] text-red-400 mb-4 border border-red-400/20 bg-red-400/5 px-3 py-2">
+                {loginError}
+              </div>
+            )}
+
+            <div className="flex flex-col gap-3">
+              <button
+                onClick={handleLogin}
+                disabled={loginLoading}
+                style={{ clipPath: "polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))" }}
+                className="bg-[#00ff88] text-black font-oswald font-semibold text-sm tracking-widest px-8 py-3 hover:bg-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loginLoading ? "ВХОДИМ..." : "ВОЙТИ"}
+              </button>
+              <button
+                onClick={() => setShowLoginModal(false)}
+                style={{ clipPath: "polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))" }}
+                className="border border-[#222] text-[#555] font-oswald text-sm tracking-widest px-8 py-3 hover:border-[#444] hover:text-[#888] transition-colors"
+              >
+                ОТМЕНА
+              </button>
+            </div>
           </div>
         </div>
       )}

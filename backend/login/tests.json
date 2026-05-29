@@ -1,0 +1,28 @@
+{
+  "tests": [
+    {
+      "name": "OPTIONS preflight",
+      "method": "OPTIONS",
+      "path": "/",
+      "expectedStatus": 200
+    },
+    {
+      "name": "Empty fields",
+      "method": "POST",
+      "path": "/",
+      "body": {"username": "", "password": ""},
+      "expectedStatus": 400,
+      "expectedBody": {"error": "Введи имя и пароль"},
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Wrong credentials",
+      "method": "POST",
+      "path": "/",
+      "body": {"username": "nobody", "password": "wrongpass"},
+      "expectedStatus": 401,
+      "expectedBody": {"error": "Неверное имя или пароль"},
+      "bodyMatcher": "partial"
+    }
+  ]
+}
