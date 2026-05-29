@@ -1,0 +1,28 @@
+{
+  "tests": [
+    {
+      "name": "OPTIONS preflight",
+      "method": "OPTIONS",
+      "path": "/",
+      "expectedStatus": 200
+    },
+    {
+      "name": "Empty fields",
+      "method": "POST",
+      "path": "/",
+      "body": {"username": "", "password": ""},
+      "expectedStatus": 400,
+      "expectedBody": {"error": "Имя и пароль обязательны"},
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Register success",
+      "method": "POST",
+      "path": "/",
+      "body": {"username": "ZGTestPlayer99", "password": "pass1234"},
+      "expectedStatus": 200,
+      "expectedBody": {"success": true},
+      "bodyMatcher": "partial"
+    }
+  ]
+}

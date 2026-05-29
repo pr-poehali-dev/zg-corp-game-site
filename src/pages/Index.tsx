@@ -1,6 +1,14 @@
 import { useState, useEffect } from "react";
 import Icon from "@/components/ui/icon";
 
+const REGISTER_URL = "https://functions.poehali.dev/7c106308-51fb-46fc-91d1-fc9e4513ddc9";
+
+const MAT_WORDS = ["хуй","хуя","хую","хуем","пизда","пиздец","пиздёж","ебать","ёбать","блядь","сука","мудак","залупа","шлюха","долбоёб","fuck","shit","bitch","asshole","cunt"];
+function hasMat(text: string) {
+  const t = text.toLowerCase();
+  return MAT_WORDS.some((w) => t.includes(w));
+}
+
 const HERO_IMAGE = "https://cdn.poehali.dev/projects/47a8c131-cfb8-490d-befb-6360ed56138c/files/2e7620ab-0aa1-4663-bb8a-99f88e86db51.jpg";
 
 const NAV_ITEMS = [
@@ -100,6 +108,14 @@ export default function Index() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [glitching, setGlitching] = useState(false);
 
+  const [showRegModal, setShowRegModal] = useState(false);
+  const [regName, setRegName] = useState("");
+  const [regPass, setRegPass] = useState("");
+  const [regError, setRegError] = useState("");
+  const [regLoading, setRegLoading] = useState(false);
+  const [regSuccess, setRegSuccess] = useState("");
+  const [offlineMsg, setOfflineMsg] = useState(false);
+
   useEffect(() => {
     const interval = setInterval(() => {
       setGlitching(true);
@@ -124,6 +140,27 @@ export default function Index() {
   const scrollTo = (href: string) => {
     setMenuOpen(false);
     document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const handleRegister = async () => {
+    setRegError("");
+    if (!regName.trim() || !regPass.trim()) { setRegError("Заполни имя и пароль"); return; }
+    if (hasMat(regName) || hasMat(regPass)) { setRegError("Нецензурные слова запрещены ❌"); return; }
+    if (regName.trim().length < 2) { setRegError("Имя слишком короткое (мин. 2 символа)"); return; }
+    if (regPass.trim().length < 4) { setRegError("Пароль слишком короткий (мин. 4 символа)"); return; }
+    setRegLoading(true);
+    const res = await fetch(REGISTER_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username: regName.trim(), password: regPass.trim() }),
+    });
+    const data = await res.json();
+    setRegLoading(false);
+    if (data.success) {
+      setRegSuccess(`Добро пожаловать в ZG Corp, ${data.username}! 🚀`);
+    } else {
+      setRegError(data.error || "Ошибка регистрации");
+    }
   };
 
   return (
@@ -249,6 +286,13 @@ export default function Index() {
               className="border border-[#00ff88] text-[#00ff88] font-oswald font-semibold text-sm tracking-widest px-8 py-3 hover:bg-[#00ff88]/10 transition-colors duration-200"
             >
               О НАС
+            </button>
+            <button
+              onClick={() => { setShowRegModal(true); setRegError(""); setRegSuccess(""); setRegName(""); setRegPass(""); setOfflineMsg(false); }}
+              style={{ clipPath: "polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))" }}
+              className="border border-white/30 text-white font-oswald font-semibold text-sm tracking-widest px-8 py-3 hover:bg-white/10 transition-colors duration-200"
+            >
+              ЗАРЕГИСТРИРОВАТЬСЯ
             </button>
           </div>
         </div>
@@ -667,6 +711,101 @@ export default function Index() {
           </span>
         </div>
       </footer>
+
+      {/* ═══════════ MODAL REGISTER ═══════════ */}
+      {showRegModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+          <div
+            className="relative bg-[#0d0d0d] border border-[#1e1e1e] w-full max-w-md p-8"
+            style={{ clipPath: "polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px))" }}
+          >
+            <div className="absolute top-3 right-3 w-8 h-8 border-r border-t border-[#00ff88]/30 pointer-events-none" />
+            <div className="absolute bottom-3 left-3 w-8 h-8 border-l border-b border-[#00ff88]/30 pointer-events-none" />
+
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-1 h-6 bg-[#00ff88]" />
+              <h2 className="font-russo text-white text-xl tracking-widest">РЕГИСТРАЦИЯ</h2>
+            </div>
+
+            {regSuccess ? (
+              <div className="text-center py-6">
+                <div className="font-russo text-[#00ff88] text-lg mb-4">{regSuccess}</div>
+                <button
+                  onClick={() => setShowRegModal(false)}
+                  style={{ clipPath: "polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px))" }}
+                  className="bg-[#00ff88] text-black font-oswald font-semibold text-sm tracking-widest px-8 py-3 hover:bg-white transition-colors"
+                >
+                  ЗАКРЫТЬ
+                </button>
+              </div>
+            ) : offlineMsg ? (
+              <div className="text-center py-6">
+                <div className="font-mono-ibm text-[#888] text-sm leading-relaxed mb-6">
+                  Вы <span className="text-white">оффлайн бот</span>, но в любой момент можете зарегистрироваться.
+                </div>
+                <button
+                  onClick={() => setShowRegModal(false)}
+                  style={{ clipPath: "polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px))" }}
+                  className="border border-[#333] text-[#666] font-oswald text-sm tracking-widest px-8 py-3 hover:border-[#00ff88]/30 hover:text-[#aaa] transition-colors"
+                >
+                  ЗАКРЫТЬ
+                </button>
+              </div>
+            ) : (
+              <>
+                <div className="space-y-4 mb-6">
+                  <div>
+                    <label className="font-mono-ibm text-[10px] text-[#555] tracking-widest block mb-2">ИМЯ АГЕНТА</label>
+                    <input
+                      type="text"
+                      value={regName}
+                      onChange={(e) => setRegName(e.target.value)}
+                      placeholder="Введи своё имя..."
+                      maxLength={30}
+                      className="w-full bg-[#111] border border-[#222] text-white font-mono-ibm text-sm px-4 py-3 outline-none focus:border-[#00ff88]/50 transition-colors placeholder:text-[#333]"
+                    />
+                  </div>
+                  <div>
+                    <label className="font-mono-ibm text-[10px] text-[#555] tracking-widest block mb-2">ПАРОЛЬ</label>
+                    <input
+                      type="password"
+                      value={regPass}
+                      onChange={(e) => setRegPass(e.target.value)}
+                      placeholder="Придумай пароль..."
+                      maxLength={50}
+                      className="w-full bg-[#111] border border-[#222] text-white font-mono-ibm text-sm px-4 py-3 outline-none focus:border-[#00ff88]/50 transition-colors placeholder:text-[#333]"
+                    />
+                  </div>
+                </div>
+
+                {regError && (
+                  <div className="font-mono-ibm text-[11px] text-red-400 mb-4 border border-red-400/20 bg-red-400/5 px-3 py-2">
+                    {regError}
+                  </div>
+                )}
+
+                <div className="flex flex-col gap-3">
+                  <button
+                    onClick={handleRegister}
+                    disabled={regLoading}
+                    style={{ clipPath: "polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))" }}
+                    className="bg-[#00ff88] text-black font-oswald font-semibold text-sm tracking-widest px-8 py-3 hover:bg-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {regLoading ? "РЕГИСТРИРУЕМ..." : "ЗАРЕГИСТРИРОВАТЬ АККАУНТ"}
+                  </button>
+                  <button
+                    onClick={() => setOfflineMsg(true)}
+                    style={{ clipPath: "polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))" }}
+                    className="border border-[#222] text-[#555] font-oswald text-sm tracking-widest px-8 py-3 hover:border-[#444] hover:text-[#888] transition-colors"
+                  >
+                    ОТКАЗАТЬСЯ
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
 
     </div>
   );
